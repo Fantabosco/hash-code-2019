@@ -56,7 +56,7 @@ public class FileUtils {
 		BufferedWriter bufferedWriter = null;
 		FileWriter fileWriter = null;
 		try {
-			String outputFile = fileName.replace(".in", ".out");
+			String outputFile = fileName.replace(".txt", ".out.txt");
 			fileWriter = new FileWriter(outputFile);
 			bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.append(solution);

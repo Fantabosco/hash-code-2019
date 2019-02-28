@@ -1,25 +1,26 @@
 package it.reply.challenge.fantabosco.hashcode;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import it.reply.challenge.fantabosco.hashcode.model.Photo;
+import it.reply.challenge.fantabosco.hashcode.model.Slide;
 import utils.FileUtils;
 
 public class Main {
 
 	// Constants
-	private static final String DATASET_A = "a_example.in";
-	private static final String DATASET_B = "b_small.in";
-	private static final String DATASET_C = "c_medium.in";
-	private static final String DATASET_D = "d_big.in";
-	
+	private static final String DATASET_A = "a_example.txt";
+	private static final String DATASET_B = "b_lovely_landscapes.txt";
+	private static final String DATASET_C = "c_memorable_moments.txt";
+	private static final String DATASET_D = "d_pet_pictures.txt";
+	private static final String DATASET_E = "e_shiny_selfies.txt";
+
 	// Model
-	private static Map<String,String> model = new HashMap<>();
+	private static List<Photo> model;
 	
-	
+	private static List<Slide> solution;
+
 
 	public static void main(String[] args) {
 
@@ -31,10 +32,12 @@ public class Main {
 		}
 		
 		// Parser
+		model = new ArrayList<>();
 		//TODO
 		
 		
 		// Solver
+		solution = new ArrayList<>();
 		//TODO
 		
 		
