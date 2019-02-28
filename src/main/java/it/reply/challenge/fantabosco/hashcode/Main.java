@@ -18,22 +18,31 @@ public class Main {
 
 	// Model
 	private static List<Photo> model;
-	
 	private static List<Slide> solution;
-
 
 	public static void main(String[] args) {
 
 		// Reader
 		String dataset = DATASET_A;
 		List<String> file = FileUtils.readFile("challenge/" + dataset);
-		for(String line : file) {
-			
-		}
 		
 		// Parser
-		model = new ArrayList<>();
-		//TODO
+		int index = 0;
+		int numPhoto = Integer.parseInt(file.remove(0));
+		model = new ArrayList<>(numPhoto);
+		for(String line : file) {
+			String[] values = line.split(" ");
+			//H 3 cat beach sun
+			Photo p = new Photo();
+			p.isHorizontal = "H".equals(values[0]);
+			int numTags = Integer.parseInt(values[1]);
+			p.tags = new ArrayList<>(numTags);
+			for(int i = 2; i < numTags; i++) {
+				p.tags.add(values[i]);
+			}
+			p.index = index;
+			index++;
+		}
 		
 		
 		// Solver
