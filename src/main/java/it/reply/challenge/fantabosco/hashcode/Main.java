@@ -49,9 +49,8 @@ public class Main {
 		
 		
 		// Solver
-		solution = new ArrayList<>();
-		//TODO
-		
+		solution = GiovaSolver.solve(model);
+
 		
 		// Serializer & validator
 		StringBuilder solutionText = new StringBuilder();
