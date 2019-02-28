@@ -17,7 +17,7 @@ public class GiovaSolver {
 	private GiovaSolver() {
 	}
 
-	private static final int MAX_CYCLES = 20;
+	private static final int MAX_CYCLES = 30;
 
 	public static List<Slide> solve(List<Photo> model) {
 
@@ -48,16 +48,18 @@ public class GiovaSolver {
 		solution.add(slideShow.get(1));
 		for(int i=2; i<slideShow.size(); i++) {
 			int cycle = 0;
+			
 			// Min value is this Slide put at the end
 			int maxScore = score(solution.get(solution.size() - 1), slideShow.get(i));
 			int maxScoreJ = solution.size();
 			
-			int randomStart = random.nextInt(solution.size() - 1);
-			for(int j=0; j<solution.size() && cycle < MAX_CYCLES; j++) {
+			int randomStart = random.nextInt(solution.size());
+			for(int j=0; j < solution.size() && cycle < MAX_CYCLES; j++) {
 				// Pick a random start
 				int jr = randomStart + j;
-				if(jr >= solution.size() - 1) {
-					jr -= solution.size() - 1;
+				if(jr >= solution.size() - 2) {
+					jr = 0;
+					randomStart = -j;
 				}
 				// Current score
 				int p1 = score(solution.get(jr), solution.get(jr + 1));
