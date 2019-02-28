@@ -6,4 +6,5 @@ public class Photo {
 	public int index;
 	public boolean isHorizontal;
 	public List<String> tags;
+	public boolean isUsedInSlideshow;
 }
