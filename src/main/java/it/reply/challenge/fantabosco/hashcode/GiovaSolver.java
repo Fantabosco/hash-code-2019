@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import it.reply.challenge.fantabosco.hashcode.model.Photo;
 import it.reply.challenge.fantabosco.hashcode.model.Slide;
+import utils.GreedySolution;
 
 public class GiovaSolver {
 
@@ -29,6 +30,11 @@ public class GiovaSolver {
 		int score2 = scoreSlideshow(slideShow2);
 		System.out.println("heuristic2 Solution score: " + score2);
 
+		List<Slide> slideShowR = new ArrayList<>();
+		GreedySolution.solve1(model, slideShowR);
+		int scoreR = scoreSlideshow(slideShowR);
+		System.out.println("heuristicR Solution score: " + scoreR);
+		
 		List<Slide> slideShow3 = heuristic3(slideShow2);
 		int score3 = scoreSlideshow(slideShow3);
 		System.out.println("heuristic3 Solution score: " + score3);

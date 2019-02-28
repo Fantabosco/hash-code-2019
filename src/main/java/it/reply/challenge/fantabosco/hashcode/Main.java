@@ -26,7 +26,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		// Reader
-		String dataset = DATASET_A;
+		String dataset = DATASET_D;
 		List<String> file = FileUtils.readFile("challenge/" + dataset);
 		
 		// Parser
@@ -52,8 +52,8 @@ public class Main {
 		// Solver
 		solution = new ArrayList<>();
 		//TODO
-		GreedySolution.solve1(model, solution);
-//		solution = GiovaSolver.solve(model);
+//		GreedySolution.solve1(model, solution);
+		solution = GiovaSolver.solve(model);
 		
 		// Serializer & validator
 		if(solution.size() == 0) {
