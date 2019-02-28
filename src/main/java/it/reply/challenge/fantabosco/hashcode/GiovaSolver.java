@@ -33,33 +33,14 @@ public class GiovaSolver {
 		int score3 = scoreSlideshow(slideShow3);
 		System.out.println("heuristic3 Solution score: " + score3);
 
-//		for (int i = 0; i < slideShow.size(); i++) {
-//			int maxScore = 0;
-//			int maxIndex = -1;
-//			for (int j = 0; j < slideShow.size(); j++) {
-//				if (j == i) {
-//					continue;
-//				}
-//				Slide s1 = slideShow.get(i);
-//				Slide s2 = slideShow.get(j);
-//
-//				int i1 = slideShow.indexOf(s1);
-//				int i2 = slideShow.indexOf(s2);
-//				int leftScore, rightScore;
-//				
-//				int currentScore = 0;
-//				leftScore = 0;
-//				rightScore = 0;				
-//				int swapScore = 0;
-//				leftScore = 0;
-//				rightScore = 0;
-//			}
-//		}
 		return score1 > score2 ? slideShow1 : slideShow2;
 	}
 	
 	private static final Random random = new Random();
 
+	/**
+	 * Riordina uno slideShow cercando di migliorare il puntaggio della sequenza di slide
+	 */
 	private static List<Slide> heuristic3(List<Slide> slideShow) {
 		// Insertion sort
 		List<Slide> solution = new LinkedList<>();
@@ -103,10 +84,7 @@ public class GiovaSolver {
 	}
 
 	/**
-	 * Associa le foto verticali con tag più diversi
-	 * 
-	 * @param model
-	 * @return
+	 * Associa le foto verticali massimizzando il punteggio rispetto alla slide precedente
 	 */
 	private static List<Slide> heuristic2(List<Photo> model) {
 		List<Slide> slideShow = new ArrayList<>();
