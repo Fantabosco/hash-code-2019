@@ -53,6 +53,9 @@ public class Main {
 
 		
 		// Serializer & validator
+		if(solution.size() == 0) {
+			throw new IllegalArgumentException("Nessuna slide");
+		}
 		StringBuilder solutionText = new StringBuilder();
 		solutionText.append(solution.size());
 		solutionText.append("\n");
