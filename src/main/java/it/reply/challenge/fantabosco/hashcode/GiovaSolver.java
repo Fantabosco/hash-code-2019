@@ -17,7 +17,7 @@ public class GiovaSolver {
 	private GiovaSolver() {
 	}
 
-	private static final int MAX_CYCLES = 30;
+	private static final int MAX_CYCLES = 20;
 
 	public static List<Slide> solve(List<Photo> model) {
 
@@ -67,35 +67,37 @@ public class GiovaSolver {
 		solution.add(slideShow.get(1));
 		for(int i=2; i<slideShow.size(); i++) {
 			int cycle = 0;
-			int maxScore = 0;
-			int maxScoreJ = 0;
+			// Min value is this Slide put at the end
+			int maxScore = score(solution.get(solution.size() - 1), slideShow.get(i));
+			int maxScoreJ = solution.size();
 			
-			int randomStart = random.nextInt(solution.size());
-			for(int j=0; j<solution.size() - 1 && cycle < MAX_CYCLES; j++) {
+			int randomStart = random.nextInt(solution.size() - 1);
+			for(int j=0; j<solution.size() && cycle < MAX_CYCLES; j++) {
 				// Pick a random start
 				int jr = randomStart + j;
 				if(jr >= solution.size() - 1) {
 					jr -= solution.size() - 1;
 				}
-				int p1 = score(solution.get(jr), solution.get(jr + 1)); 
-				int pNew = score(solution.get(jr), slideShow.get(i)) + score(slideShow.get(i), solution.get(jr + 1));
+				// Current score
+				int p1 = score(solution.get(jr), solution.get(jr + 1));
 				
-				if(pNew> p1 && pNew > maxScore) {
+				// New scores
+				int pNew = score(solution.get(jr), slideShow.get(i));
+				
+				// Is the new score better that current score and best score?
+				if(pNew > p1 && pNew > maxScore) {
 					maxScore = pNew;
 					maxScoreJ = jr;
 				}
 				cycle ++;
 			}
-			if(maxScore > 0) {
-				List<Slide> list1 = solution.subList(0, maxScoreJ);
-				List<Slide> list2 = solution.subList(maxScoreJ, solution.size());
-				solution = new LinkedList<>();
-				solution.addAll(list1);
-				solution.add(slideShow.get(i));
-				solution.addAll(list2);
-			} else {
-				solution.add(slideShow.get(i));
-			}
+			// Split the list and insert this slide
+			List<Slide> list1 = solution.subList(0, maxScoreJ);
+			List<Slide> list2 = solution.subList(maxScoreJ, solution.size());
+			solution = new LinkedList<>();
+			solution.addAll(list1);
+			solution.add(slideShow.get(i));
+			solution.addAll(list2);
 		}
 		return solution;
 	}
@@ -109,6 +111,7 @@ public class GiovaSolver {
 	private static List<Slide> heuristic2(List<Photo> model) {
 		List<Slide> slideShow = new ArrayList<>();
 		Iterator<Photo> iter = model.iterator();
+		Slide sPrev = null;
 		while (iter.hasNext()) {
 			Photo pNew = iter.next();
 			if (pNew.isUsedInSlideshow) {
@@ -127,8 +130,11 @@ public class GiovaSolver {
 					Photo pNew2 = iter2.next();
 					if (!pNew2.isHorizontal && !pNew2.isUsedInSlideshow) {
 						cycle++;
-						int delta = score(pNew, pNew2);
-						if (delta > numDeltaMax) {
+						Slide sTmp = new Slide();
+						sTmp.photo1=pNew;
+						sTmp.photo2=pNew2;
+						int delta = score(sTmp, sPrev);
+						if (delta >= numDeltaMax) {
 							numDeltaMax = delta;
 							pMaxTags = pNew2;
 						}
@@ -147,6 +153,7 @@ public class GiovaSolver {
 			// Now you can add the slide
 			slideShow.add(sNew);
 			pNew.isUsedInSlideshow = true;
+			sPrev = sNew;
 		}
 		return slideShow;
 	}
@@ -182,15 +189,10 @@ public class GiovaSolver {
 		return slideShow;
 	}
 
-	private static int score(Photo p1, Photo p2) {
-		Slide s1 = new Slide();
-		Slide s2 = new Slide();
-		s1.photo1 = p1;
-		s2.photo1 = p2;
-		return score(s1, s2);
-	}
-
 	private static int score(Slide s1, Slide s2) {
+		if(s2 == null) {
+			return 0;
+		}
 		Set<String> tags1 = getTags(s1.photo1, s1.photo2);
 		Set<String> tags2 = getTags(s2.photo1, s2.photo2);
 
