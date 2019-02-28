@@ -50,14 +50,10 @@ public class Main {
 		
 		
 		// Solver
-<<<<<<< HEAD
 		solution = new ArrayList<>();
 		//TODO
-		GreedySolution.solve(model, solution);
-=======
+//		GreedySolution.solve(model, solution);
 		solution = GiovaSolver.solve(model);
-
->>>>>>> 7e630408bdae181289e0e0ed9372526dce28bfa1
 		
 		// Serializer & validator
 		StringBuilder solutionText = new StringBuilder();
