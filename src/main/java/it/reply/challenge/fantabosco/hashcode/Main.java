@@ -8,6 +8,7 @@ import java.util.Set;
 import it.reply.challenge.fantabosco.hashcode.model.Photo;
 import it.reply.challenge.fantabosco.hashcode.model.Slide;
 import utils.FileUtils;
+import utils.GreedySolution;
 
 public class Main {
 
@@ -39,8 +40,8 @@ public class Main {
 			p.isHorizontal = "H".equals(values[0]);
 			int numTags = Integer.parseInt(values[1]);
 			p.tags = new ArrayList<>(numTags);
-			for(int i = 2; i < numTags; i++) {
-				p.tags.add(values[i]);
+			for(int i = 0; i < numTags; i++) {
+				p.tags.add(values[i + 2]);
 			}
 			p.index = index;
 			model.add(p);
@@ -51,7 +52,7 @@ public class Main {
 		// Solver
 		solution = new ArrayList<>();
 		//TODO
-		
+		GreedySolution.solve(model, solution);
 		
 		// Serializer & validator
 		StringBuilder solutionText = new StringBuilder();
@@ -68,9 +69,11 @@ public class Main {
 				if(slide.photo2 != null) {
 					throw new IllegalArgumentException("Combinazione errata");
 				}
+				solutionText.append("\n");
 			} else {
 				solutionText.append(" ");
 				solutionText.append(slide.photo2.index);
+				solutionText.append("\n");
 				if(uniquePhotos.contains(slide.photo2.index)) {
 					throw new IllegalArgumentException("Foto già presente");
 				}
@@ -79,7 +82,7 @@ public class Main {
 		}
 		
 		// Writer
-		FileUtils.writeFile(dataset, solutionText.toString());
+		FileUtils.writeFile(dataset, solutionText.substring(0, solutionText.length() - 1).toString());
 	}
 	
 }
