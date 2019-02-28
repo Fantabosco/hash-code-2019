@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public class GiovaSolver {
 	private GiovaSolver() {
 	}
 
-	private static final int MAX_CYCLES = 20;
+	private static final int MAX_CYCLES = 30;
 
 	public static List<Slide> solve(List<Photo> model) {
 
@@ -56,6 +57,8 @@ public class GiovaSolver {
 //		}
 		return score1 > score2 ? slideShow1 : slideShow2;
 	}
+	
+	private static final Random random = new Random();
 
 	private static List<Slide> heuristic3(List<Slide> slideShow) {
 		// Insertion sort
@@ -66,13 +69,20 @@ public class GiovaSolver {
 			int cycle = 0;
 			int maxScore = 0;
 			int maxScoreJ = 0;
+			
+			int randomStart = random.nextInt(solution.size());
 			for(int j=0; j<solution.size() - 1 && cycle < MAX_CYCLES; j++) {
-				int p1 = score(solution.get(j), solution.get(j + 1)); 
-				int pNew = score(solution.get(j), slideShow.get(i)) + score(slideShow.get(i), solution.get(j + 1));
+				// Pick a random start
+				int jr = randomStart + j;
+				if(jr >= solution.size() - 1) {
+					jr -= solution.size() - 1;
+				}
+				int p1 = score(solution.get(jr), solution.get(jr + 1)); 
+				int pNew = score(solution.get(jr), slideShow.get(i)) + score(slideShow.get(i), solution.get(jr + 1));
 				
 				if(pNew> p1 && pNew > maxScore) {
 					maxScore = pNew;
-					maxScoreJ = j;
+					maxScoreJ = jr;
 				}
 				cycle ++;
 			}
@@ -83,6 +93,8 @@ public class GiovaSolver {
 				solution.addAll(list1);
 				solution.add(slideShow.get(i));
 				solution.addAll(list2);
+			} else {
+				solution.add(slideShow.get(i));
 			}
 		}
 		return solution;
@@ -104,12 +116,10 @@ public class GiovaSolver {
 			}
 			Slide sNew = new Slide();
 			sNew.photo1 = pNew;
-			slideShow.add(sNew);
-			pNew.isUsedInSlideshow = true;
 
 			// For V, find best match
 			if (!sNew.photo1.isHorizontal) {
-				int numMaxTags = 0;
+				int numDeltaMax = 0;
 				Photo pMaxTags = null;
 				Iterator<Photo> iter2 = model.iterator();
 				int cycle = 0;
@@ -117,18 +127,26 @@ public class GiovaSolver {
 					Photo pNew2 = iter2.next();
 					if (!pNew2.isHorizontal && !pNew2.isUsedInSlideshow) {
 						cycle++;
-						int tags = score(pNew, pNew2);
-						if (tags > numMaxTags) {
-							numMaxTags = tags;
+						int delta = score(pNew, pNew2);
+						if (delta > numDeltaMax) {
+							numDeltaMax = delta;
 							pMaxTags = pNew2;
 						}
 					}
 				}
+				
 				if (pMaxTags != null) {
 					sNew.photo2 = pMaxTags;
 					pMaxTags.isUsedInSlideshow = true;
+				} else {
+					// Cannot add this vertical photo
+					continue;
 				}
 			}
+			
+			// Now you can add the slide
+			slideShow.add(sNew);
+			pNew.isUsedInSlideshow = true;
 		}
 		return slideShow;
 	}
@@ -165,7 +183,11 @@ public class GiovaSolver {
 	}
 
 	private static int score(Photo p1, Photo p2) {
-		return getTags(p1, p2).size();
+		Slide s1 = new Slide();
+		Slide s2 = new Slide();
+		s1.photo1 = p1;
+		s2.photo1 = p2;
+		return score(s1, s2);
 	}
 
 	private static int score(Slide s1, Slide s2) {
