@@ -1,7 +1,9 @@
 package it.reply.challenge.fantabosco.hashcode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import it.reply.challenge.fantabosco.hashcode.model.Photo;
 import it.reply.challenge.fantabosco.hashcode.model.Slide;
@@ -41,6 +43,7 @@ public class Main {
 				p.tags.add(values[i]);
 			}
 			p.index = index;
+			model.add(p);
 			index++;
 		}
 		
@@ -51,13 +54,32 @@ public class Main {
 		
 		
 		// Serializer & validator
-		StringBuilder solution = new StringBuilder();
-		//TODO
-		
+		StringBuilder solutionText = new StringBuilder();
+		solutionText.append(solution.size());
+		solutionText.append("\n");
+		Set<Integer> uniquePhotos = new HashSet<>();
+		for(Slide slide : solution) {
+			solutionText.append(slide.photo1.index);
+			if(uniquePhotos.contains(slide.photo1.index)) {
+				throw new IllegalArgumentException("Foto già presente");
+			}
+			uniquePhotos.add(slide.photo1.index);
+			if(slide.photo1.isHorizontal) {
+				if(slide.photo2 != null) {
+					throw new IllegalArgumentException("Combinazione errata");
+				}
+			} else {
+				solutionText.append(" ");
+				solutionText.append(slide.photo2.index);
+				if(uniquePhotos.contains(slide.photo2.index)) {
+					throw new IllegalArgumentException("Foto già presente");
+				}
+				uniquePhotos.add(slide.photo2.index);
+			}
+		}
 		
 		// Writer
-		FileUtils.writeFile(dataset, solution.toString());
+		FileUtils.writeFile(dataset, solutionText.toString());
 	}
-	
 	
 }
